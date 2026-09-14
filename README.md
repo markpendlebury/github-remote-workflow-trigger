@@ -1,31 +1,38 @@
-# GitHub Workflow Trigger
+# GitHub Remote Workflow Trigger
 
-This repository contains an exampleog how to trigger a github workflow using the PyGithub library. It also contains an example github workflow which echos out an inputted string.
+A minimal example of triggering a GitHub Actions workflow remotely from Python using [PyGithub](https://github.com/PyGithub/PyGithub).
 
-## What the Code Does
+## What it demonstrates
 
-`.github/workflows/workflow.yml` will create a basic workflow which is triggered on a workflow dispatch and accepts one input named `my_input`
+- `.github/workflows/workflow.yml` defines a workflow with a `workflow_dispatch` trigger that accepts one input (`my_input`) and echoes it.
+- `workflow_trigger.py` authenticates to GitHub, resolves the repository and workflow, dispatches the workflow on a chosen branch, then polls for the run to start and reports its URL and status.
 
-`workflow_trigger.py` does the following:
+## Prerequisites
 
-1. Retrieves environment variables for the GitHub token, my input, repository name, workflow filename, and branch name.
-2. Defines a function `trigger_workflow` that:
-   - Creates an instance of GitHub and logs in using the provided token.
-   - Retrieves the repository object.
-   - Retrieves the workflow object from the repository.
-   - Triggers the workflow on the specified branch, passing a string as an input.
-3. Calls the `trigger_workflow` function.
+- Python 3.8+
+- PyGithub 2.x (the script uses `github.Auth.Token`)
 
-## How to Use
+```bash
+pip install -r requirements.txt
+```
 
-1. Clone/Fork this repository and make sure it creates a new workflow named "Example Workflow".
-2. Generate a PAT token with at least read/write scope for Actions.
-3. Set the following environment variables on your local machine:
-   - `GITHUB_TOKEN`: Your GitHub PAT token from step 2.
-   - `MY_INPUT`: A simple string, for example "Hello World".
-   - `REPOSITORY`: The name of your repository in the format `owner/repo`.
-   - `WORKFLOW_FILENAME`: The filename of your workflow file in the `.github/workflows` directory.
-   - `BRANCH`: The name of the branch you want to run the workflow on.
-3. Run the script locally with the command `python workflow_trigger.py`.
+## Usage
 
-Profit
+1. Generate a GitHub personal access token (PAT) with the `workflow` scope (add `repo` if the repository is private).
+2. Set the environment variables:
+
+| Variable | Description |
+| --- | --- |
+| `GITHUB_TOKEN` | Your GitHub PAT |
+| `MY_INPUT` | Any string, e.g. `Hello World` |
+| `REPOSITORY` | Repository name as `owner/repo` |
+| `WORKFLOW_FILENAME` | Workflow filename, e.g. `workflow.yml` |
+| `BRANCH` | Branch to run the workflow on, e.g. `main` |
+
+3. Run it:
+
+```bash
+python workflow_trigger.py
+```
+
+The script prints the authenticated user, repository and workflow name, dispatches the workflow, then polls until the run appears and prints its URL and status.
