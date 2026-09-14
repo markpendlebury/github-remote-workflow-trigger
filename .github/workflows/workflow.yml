@@ -4,8 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       my_input:
-        description: "A String input to demonstrate passing a parameter into a workflow"
+        description: "A string input to demonstrate passing a parameter into a workflow"
         required: true
+
+permissions:
+  contents: read
 
 jobs:
   TestJob:
@@ -13,9 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
       - name: Run a one-line script
         run: echo ${{ github.event.inputs.my_input }}
-    
-
-
